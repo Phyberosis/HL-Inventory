@@ -1,0 +1,16 @@
+-- https for camera permissions
+make certificate
+https://github.com/FiloSottile/mkcert
+$ mkcert 10.0.0.224
+
+add to trusted on device
+https://support.securly.com/hc/en-us/articles/360026808753-How-to-manually-install-the-Securly-SSL-certificate-on-Windows
+
+https server
+https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/
+
+-- camera capture
+turns out barcode scanner can just use camera directly
+https://www.npmjs.com/package/webcam-easy
+
+-- barcode scanner

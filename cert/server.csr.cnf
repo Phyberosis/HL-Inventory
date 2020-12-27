@@ -1,0 +1,14 @@
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[dn]
+C=CA
+ST=BC
+L=_
+O=Phyberosis
+OU=personal
+emailAddress=_
+CN = HL_Inventory

@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="src/qr.min.js"></script>
+    <script src="src/bar.min.js"></script>
+
+    <!-- dont scale for mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+</head>
+
+<body>
+    <div>
+        <label id="lbl_result">res</label>
+    </div>
+
+    <div>
+        <!-- must be named this due to library -->
+        <canvas id="qr-canvas"></canvas>
+    </div>
+
+    <!-- <audio id="snapSound" src="audio/snap.wav" preload = "auto"></audio> -->
+
+    <script src="src/main.js"></script>
+</body>
+
+</html>
