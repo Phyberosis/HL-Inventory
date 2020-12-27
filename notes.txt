@@ -2,9 +2,12 @@
 make certificate
 https://github.com/FiloSottile/mkcert
 $ mkcert 10.0.0.224
+or use the bash script
 
-add to trusted on device
+add to trusted on Windows
 https://support.securly.com/hc/en-us/articles/360026808753-How-to-manually-install-the-Securly-SSL-certificate-on-Windows
+osx should be similar
+havent figured this out for android, it needs some combined certificate and key file
 
 https server
 https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/
@@ -13,4 +16,8 @@ https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/
 turns out barcode scanner can just use camera directly
 https://www.npmjs.com/package/webcam-easy
 
--- barcode scanner
+-- code scanner
+qr codes
+https://www.sitepoint.com/create-qr-code-reader-mobile-website/
+barcodes
+https://github.com/serratus/quaggaJS/tree/master/dist
