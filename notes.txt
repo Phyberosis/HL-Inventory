@@ -12,6 +12,8 @@ havent figured this out for android, it needs some combined certificate and key 
 https server
 https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/
 
+-- expose to public via portforward
+
 -- camera capture
 turns out barcode scanner can just use camera directly
 https://www.npmjs.com/package/webcam-easy
@@ -21,3 +23,13 @@ qr codes
 https://www.sitepoint.com/create-qr-code-reader-mobile-website/
 barcodes
 https://github.com/serratus/quaggaJS/tree/master/dist
+
+-- link with elab
+transitioned to express for easier rest endpoints
+express.use(*static*) syntax to serve static endpoints
+
+xmlhttprequest uses local url paths
+use axio for CORS from nodejs
+https://github.com/axios/axios
+
+using /-scanner endpoint for barcode lookups
