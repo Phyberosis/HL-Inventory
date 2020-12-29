@@ -1,5 +1,10 @@
 # HL-Inventory
 
-LAN nodejs server with client barcode scanning
+nodejs server with client barcode/qrcode scanning
 
-using npm
+### instructions
+clone repo and $ npm install
+
+set local ip and port in server.js
+
+$ npm start
