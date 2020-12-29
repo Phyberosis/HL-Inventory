@@ -24,7 +24,7 @@ https://www.sitepoint.com/create-qr-code-reader-mobile-website/
 barcodes
 https://github.com/serratus/quaggaJS/tree/master/dist
 
--- link with elab
+-- simple link with elab
 transitioned to express for easier rest endpoints
 express.use(*static*) syntax to serve static endpoints
 
@@ -33,3 +33,6 @@ use axio for CORS from nodejs
 https://github.com/axios/axios
 
 using /-scanner endpoint for barcode lookups
+
+-- storing/retrieving samples
+barcodes for boxes?

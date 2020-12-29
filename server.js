@@ -37,15 +37,9 @@ app.post('/-scanner', (req, res) => {
   // console.log(JSON.stringify(req.body))
 
   let params = req.body;
-  let ax = {
-    url: params.url,
-    method: params.method,
-    data: params.data,
-    headers: params.headers
-  }
-  console.log(JSON.stringify(ax))
+  console.log(JSON.stringify(params))
 
-  axios(ax).then((elabReply) => {
+  axios(params).then((elabReply) => {
     res.json({response: elabReply.data});
     res.end();
   }).catch((err) => {
@@ -80,8 +74,6 @@ const server = https.createServer(credentials, app)
 server.listen(port, hostname, () => {
   console.log(`started on ${hostname}:${port}`)
 })
-
-
 
 // let ax = {
 //   // url: data.url,
