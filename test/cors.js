@@ -4,7 +4,7 @@ function reqListener() {
     document.getElementById("label").innerHTML = this.responseText
 }
 
-var address = "/-scanner"
+var address = "/-cors"
 
 var oReq = new XMLHttpRequest();
 oReq.addEventListener("load", reqListener);
@@ -19,7 +19,6 @@ oReq.setRequestHeader("Content-Type", "application/json");
 const headers = {
     Authorization: '172d2e76f397c3600be76b01a16d2952'
 }
-
 
 //885050 1
 //885059 2
@@ -38,10 +37,14 @@ const ebody = {
     position: 12
 }
 
+const st1 = '037684';
+const st2 = '037687';
+
 const pre = 'https://us.elabjournal.com/api/v1/' //### BE CAREFUL TONY, THIS IS THE ACTUAL SITE ###
 const body = {
     method: 'get',
-    url: pre + `storageLayers/${sb1}/freeLocation`,
+    url: pre + `sampleTypes/${st2}`,
+    // url: pre + `storageLayers/${sb1}`,
     // url: pre + `samples/${a}/moveToLayer/${sb1}`,
     // url: 'https://dog.ceo/api/breeds/list/all',
     // CType: 'application/json',

@@ -34,5 +34,12 @@ https://github.com/axios/axios
 
 using /-scanner endpoint for barcode lookups
 
+-- ui
+power icon
+https://www.cleanpng.com/png-power-symbol-computer-icons-1895423/
+using bootstrap
+
+hard to start/stop camera so just go to sleep page
+
 -- storing/retrieving samples
 barcodes for boxes?

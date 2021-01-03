@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Phyberosis/HL-Inventory#readme",
   "dependencies": {
     "axios": "^0.21.1",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "serve-favicon": "^2.5.0"
   }
 }

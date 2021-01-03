@@ -6,6 +6,7 @@ const axios = require('axios').default
 const kpath = 'cert/10.0.0.224';
 const hostname = '10.0.0.224';
 // const hostname = 'localhost';
+// const hostname = '192.168.43.187';
 const port = 3388;
 const credentials = {
   key: fs.readFileSync(kpath + '-key.pem'),
@@ -17,6 +18,10 @@ app.use(express.json());
 
 app.use("/src", express.static('src'));
 app.use("/test", express.static('test'));
+app.use("/lib", express.static('lib'));
+
+const favicon = require('serve-favicon');
+app.use(favicon(__dirname + '\\favicon.ico'));
 
 app.get('/', (req, res) => {
   console.log(`get:${req.originalUrl}`)
@@ -32,12 +37,32 @@ app.get('/', (req, res) => {
   return ReplyPage(path, ext, res);
 })
 
-app.post('/-scanner', (req, res) => {
+app.get('/sleep', (req, res) =>{
+  console.log("sleep")
+
+  return ReplyPage('./pages/sleep.html', 'html', res);
+})
+
+app.post('/-cors', (req, res) => {
   console.log(`post:${req.originalUrl}`)
   // console.log(JSON.stringify(req.body))
 
   let params = req.body;
   console.log(JSON.stringify(params))
+
+  // divert sample type since elab has no barcodes
+  if(params.url.includes('barcode/'))
+  {
+    let start = params.url.lastIndexOf('/');
+    let code = params.url.substring(start+1);
+
+    // arbitrary 
+    if (code.startsWith("004"))
+    {
+      let sampleTypeID = code.substring(code.length - 6);
+      params.url = params.url.substring(0, start);
+    }
+  }
 
   axios(params).then((elabReply) => {
     res.json({response: elabReply.data});
