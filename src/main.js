@@ -149,7 +149,7 @@ class CLProcessor extends CodeProcessor {
 
         setLogBorder('cyan');
         // need own sample id thing
-        askELab('get', `barcode/009000000037655`).then((res) => {
+        askELab('get', `barcode/004000000037687`).then((res) => {
             console.log(res);
         }).catch((err) => {
             updateLog(9, `failed to move sample, elab: ${err}\nplease try again`)
@@ -195,14 +195,11 @@ BUTTONS[4].addEventListener("click", () => {
 // ================ elab ================
 
 function askELab(method, endpoint, data = {}) {
-    const headers = { Authorization: '172d2e76f397c3600be76b01a16d2952' }
 
-    const pre = 'https://us.elabjournal.com/api/v1/'
     let body = {
         method: method,
-        url: pre + endpoint,
-        data: data,
-        headers: headers
+        url: endpoint,
+        data: data
     }
 
     let oReq = new XMLHttpRequest();
