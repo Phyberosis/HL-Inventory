@@ -11,15 +11,6 @@ oReq.addEventListener("load", reqListener);
 oReq.open("POST", address);
 oReq.setRequestHeader("Content-Type", "application/json");
 
-// const ebody = {
-//     username: 'phyberos@student.ubc.ca',
-//     password: 'sd43South27'
-// }
-
-const headers = {
-    Authorization: '172d2e76f397c3600be76b01a16d2952'
-}
-
 //885050 1
 //885059 2
 //885065 3
@@ -37,19 +28,18 @@ const ebody = {
     position: 12
 }
 
-const st1 = '037684';
-const st2 = '037687';
-
-const pre = 'https://us.elabjournal.com/api/v1/' //### BE CAREFUL TONY, THIS IS THE ACTUAL SITE ###
+const st1 = '004000000037684';
+const st2 = '004000000037687';
+const bar = '005000011221033';
+            
 const body = {
     method: 'get',
-    url: pre + `sampleTypes/${st2}`,
+    url: `barcode/${st2}`,
     // url: pre + `storageLayers/${sb1}`,
     // url: pre + `samples/${a}/moveToLayer/${sb1}`,
     // url: 'https://dog.ceo/api/breeds/list/all',
     // CType: 'application/json',
-    data: ebody,
-    headers: headers
+    data: ebody
 }
 let msg = JSON.stringify(body)
 console.log(msg)

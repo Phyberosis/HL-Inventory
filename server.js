@@ -33,15 +33,18 @@ app.get('/', (req, res) => {
   } else {
     path = req.url;
   }
-  
+
   return ReplyPage(path, ext, res);
 })
 
-app.get('/sleep', (req, res) =>{
+app.get('/sleep', (req, res) => {
   console.log("sleep")
 
   return ReplyPage('./pages/sleep.html', 'html', res);
 })
+
+let auth = fs.readFileSync('./auth').toString();
+const elabURL = 'https://us.elabjournal.com/api/v1/';
 
 app.post('/-cors', (req, res) => {
   console.log(`post:${req.originalUrl}`)
@@ -49,23 +52,29 @@ app.post('/-cors', (req, res) => {
 
   let params = req.body;
   console.log(JSON.stringify(params))
+  params['headers'] = { Authorization: auth };
+  let endpoint = params.url;
+  params.url = elabURL + params.url;
 
   // divert sample type since elab has no barcodes
-  if(params.url.includes('barcode/'))
-  {
-    let start = params.url.lastIndexOf('/');
-    let code = params.url.substring(start+1);
+  if (endpoint.startsWith('barcode/')) {
+    let start = endpoint.lastIndexOf('/');
+    let code = endpoint.substring(start + 1);
 
-    // arbitrary 
-    if (code.startsWith("004"))
-    {
+    // 004 is arbitrarily choosen for sample types
+    if (code.startsWith("004")) {
       let sampleTypeID = code.substring(code.length - 6);
-      params.url = params.url.substring(0, start);
+      res.json({response: {
+        type: 'SAMPLETYPE',
+        id: sampleTypeID
+      }})
+      res.end();
+      return;
     }
   }
 
   axios(params).then((elabReply) => {
-    res.json({response: elabReply.data});
+    res.json({ response: elabReply.data });
     res.end();
   }).catch((err) => {
     console.error(err.message)
