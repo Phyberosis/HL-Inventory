@@ -44,6 +44,7 @@ app.get('/sleep', (req, res) => {
 })
 
 let auth = fs.readFileSync('./auth').toString();
+console.log(auth);
 const elabURL = 'https://us.elabjournal.com/api/v1/';
 
 app.post('/-cors', (req, res) => {

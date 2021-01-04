@@ -99,7 +99,7 @@ class MSProcessor extends CodeProcessor {
             log[3] = `\n** successfully moved '${this.sampleName}' **`;
             updateLog(1, 'please scan a new sample');
             log[3] = '';
-            lastscan = 0;
+            lastcode = 0;
         }).catch((err) => {
             updateLog(9, `failed to move sample, elab: ${err}\nplease try again`)
             blinkBorder('red');
@@ -178,18 +178,18 @@ class CLProcessor extends CodeProcessor {
 
     confirm() {
         let go = true;
-        // if (!this.storageID || !this.position) {
-        //     go = false
-        //     updateLog(2, `please scan a location`);
-        // }
-        // if (this.samples.length == 0) {
-        //     go = false
-        //     updateLog(1, `please scan atleast 1 parent`);
-        // }
-        // if (!this.type) {
-        //     go = false
-        //     updateLog(1, `please scan a sample type`);
-        // }
+        if (!this.storageID || !this.position) {
+            go = false
+            updateLog(2, `please scan a location`);
+        }
+        if (this.samples.length == 0) {
+            go = false
+            updateLog(1, `please scan atleast 1 parent`);
+        }
+        if (!this.type) {
+            go = false
+            updateLog(1, `please scan a sample type`);
+        }
         if (!go) return;
 
         let t = this.type
@@ -222,7 +222,7 @@ class CLProcessor extends CodeProcessor {
             log[3] = `\n** successfully moved '${this.sampleName}' **`;
             updateLog(1, 'please scan a new sample');
             log[3] = '';
-            lastscan = 0;
+            lastcOde = 0;
         }).catch((err) => {
             updateLog(9, `failed to move sample, elab: ${err}\nplease try again`)
             blinkBorder('red');
