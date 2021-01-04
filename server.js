@@ -64,17 +64,17 @@ app.post('/-cors', (req, res) => {
     // 004 is arbitrarily choosen for sample types
     if (code.startsWith("004")) {
       let sampleTypeID = code.substring(code.length - 6);
-      res.json({response: {
+      res.json({
         type: 'SAMPLETYPE',
         id: sampleTypeID
-      }})
+      })
       res.end();
       return;
     }
   }
 
   axios(params).then((elabReply) => {
-    res.json({ response: elabReply.data });
+    res.json(elabReply.data);
     res.end();
   }).catch((err) => {
     console.error(err.message)

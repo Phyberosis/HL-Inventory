@@ -28,8 +28,8 @@ class CodeProcessor {
         updateLog(0, `scanned ${code}`);
 
         askELab('get', `barcode/${code}`).then((res) => {
+            console.log(res)
             updateLog(0, `scanned '${code}' is ${res.type} `);
-
             let fn = processor[res.type];
             // console.log(">"+ res.type + "<")
             if (fn) {
@@ -110,7 +110,8 @@ class MSProcessor extends CodeProcessor {
 class CLProcessor extends CodeProcessor {
     constructor() {
         super(btnCL)
-        this.sampleIDs = [];
+        this.samples = []
+        this.maxParents = 0;
 
         log[1] = 'please scan parents';
         log[2] = 'please scan a location';
@@ -118,16 +119,56 @@ class CLProcessor extends CodeProcessor {
         updateLog();
     }
 
+    updateParents() {
+        let l = this.samples.length;
+        let max = this.maxParents;
+        if (this.maxParents && l > max) {
+            this.samples = this.samples.splice(l - max)
+        }
+
+        let logSamples = ''
+        for (let s of this.samples) {
+            logSamples += `added parent: ${s.name}\n`
+        }
+        updateLog(1, logSamples);
+    }
+
     SAMPLE(id) {
         askELab('get', `samples/${id}`).then((res) => {
-            if (this.sampleIDs.length == 0) {
-                log[1] = '';
-            }
-
-            this.sampleIDs.push(id);
+            this.samples.push(res);
             console.log(res);
-            updateLog(1, log[1] += `added parent: ${res.name}\n`);
-            // updateLog(3, res.description)
+
+            this.updateParents();
+            blinkBorder('green')
+        }).catch((err) => {
+            updateLog(0, `bad sample, elab: ${err}`);
+            blinkBorder('red');
+        })
+    }
+
+    SAMPLETYPE(id) {
+        askELab('get', `sampleTypes/${id}`).then((res) => {
+            // console.log(JSON.stringify(res));
+            updateLog(3, `selected template: ${res.name}`);
+            this.type = res;
+            return askELab('get', `sampleTypes/${id}/meta`)
+        }).then((res) => {
+            // console.log(JSON.stringify(res))
+            let parents = 0;
+            for (let field of res.data) {
+                if (field.sampleDataType == 'SAMPLELINK') {
+                    parents++;
+                }
+                else if (field.key == "Parents") {
+                    this.metaID = field.sampleTypeMetaID;
+                }
+            }
+            this.maxParents = parents;
+            this.updateParents();
+
+            let pre = log[3];
+            let s = parents > 1 ? 's' : '';
+            updateLog(3, pre + `\ntemplate for ${parents} parent${s}`)
             blinkBorder('green')
         }).catch((err) => {
             updateLog(0, `bad sample, elab: ${err}`);
@@ -141,16 +182,47 @@ class CLProcessor extends CodeProcessor {
         //     go = false
         //     updateLog(2, `please scan a location`);
         // }
-        // if (this.sampleIDs.length == 0) {
+        // if (this.samples.length == 0) {
         //     go = false
         //     updateLog(1, `please scan atleast 1 parent`);
         // }
+        // if (!this.type) {
+        //     go = false
+        //     updateLog(1, `please scan a sample type`);
+        // }
         if (!go) return;
 
+        let t = this.type
+        console.log(t);
+        let sample = {
+            sampleTypeID: t.sampleTypeID,
+            name: `New ${t.name}`,
+            storageLayerID: this.storageID,
+            position: this.position
+        }
+
         setLogBorder('cyan');
-        // need own sample id thing
-        askELab('get', `barcode/004000000037687`).then((res) => {
+        askELab('post', `samples`, sample).then((res) => {
             console.log(res);
+            let val = ''
+            for(let p of this.samples){
+                val += `{${p.name}|${p.barcode}}, `;
+            }
+            val = val.substring(0, val.length - 2)
+            let meta = {
+                    sampleDataType: "TEXT",
+                    value: 'These will be actual links: ' + val,
+                    key: "Parents",
+                    sampleTypeMetaID: this.metaID,
+            }
+            return askELab('put', `samples/${res}/meta`, meta)
+        }).then((res)=>{
+            // console.log(res);
+            blinkBorder('green');
+            log[3] = `\n** successfully moved '${this.sampleName}' **`;
+            updateLog(1, 'please scan a new sample');
+            log[3] = '';
+            lastscan = 0;
         }).catch((err) => {
             updateLog(9, `failed to move sample, elab: ${err}\nplease try again`)
             blinkBorder('red');
@@ -212,7 +284,6 @@ function askELab(method, endpoint, data = {}) {
             // console.log(oReq.responseText);
             try {
                 let res = JSON.parse(oReq.responseText)
-                res = res.response;
                 if (typeof res == "string" && res != '') {
                     let start = res.indexOf('<h1>') + 4
                     let end = res.indexOf('</h1>')
