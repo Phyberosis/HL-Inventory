@@ -22,9 +22,16 @@ class CodeProcessor {
         }
         btn.style.borderColor = "white";
         updateLog(0, 'nothing scanned');
+        this.done = false;
     }
 
     lookupBarcode(code) {
+        if(this.done) {
+            blinkBorder('yellow');
+            updateLog(0, 'reset to start new task');
+            return;
+        }
+
         updateLog(0, `scanned ${code}`);
 
         askELab('get', `barcode/${code}`).then((res) => {
@@ -63,6 +70,10 @@ class CodeProcessor {
 class MSProcessor extends CodeProcessor {
     constructor() {
         super(btnMS)
+
+        log[1] = 'please scan a sample';
+        log[2] = 'please scan a location';
+        updateLog();
     }
 
     SAMPLE(id) {
@@ -79,6 +90,10 @@ class MSProcessor extends CodeProcessor {
     }
 
     confirm() {
+        if(this.done){
+            return;
+        }
+
         let go = true;
         if (!this.storageID || !this.position) {
             go = false
@@ -94,11 +109,9 @@ class MSProcessor extends CodeProcessor {
         askELab('post', `samples/${this.sampleID}/moveToLayer/${this.storageID}`, {
             position: this.position
         }).then(() => {
-            this.sampleID = 0;
+            this.done = true;
             blinkBorder('green');
-            log[3] = `\n** successfully moved '${this.sampleName}' **`;
-            updateLog(1, 'please scan a new sample');
-            log[3] = '';
+            updateLog(3, `\n** successfully moved '${this.sampleName}' **`);
             lastcode = 0;
         }).catch((err) => {
             updateLog(9, `failed to move sample, elab: ${err}\nplease try again`)
@@ -177,6 +190,10 @@ class CLProcessor extends CodeProcessor {
     }
 
     confirm() {
+        if(this.done){
+            return;
+        }
+
         let go = true;
         if (!this.storageID || !this.position) {
             go = false
@@ -201,12 +218,14 @@ class CLProcessor extends CodeProcessor {
             position: this.position
         }
 
+        let rawSampleID;
+
         setLogBorder('cyan');
         askELab('post', `samples`, sample).then((res) => {
             console.log(res);
             let val = ''
             for(let p of this.samples){
-                val += `{${p.name}|${p.barcode}}, `;
+                val += `(${p.name}: ${p.barcode}), `;
             }
             val = val.substring(0, val.length - 2)
             let meta = {
@@ -215,17 +234,25 @@ class CLProcessor extends CodeProcessor {
                     key: "Parents",
                     sampleTypeMetaID: this.metaID,
             }
+            rawSampleID = res;
             return askELab('put', `samples/${res}/meta`, meta)
         }).then((res)=>{
             // console.log(res);
+            this.done = true;
             blinkBorder('green');
-            log[3] = `\n** successfully moved '${this.sampleName}' **`;
-            updateLog(1, 'please scan a new sample');
-            log[3] = '';
-            lastCode = 0;
+            updateLog(4, `\n** successfully created 'New ${this.type.name}' **`);
+            lastcode = 0;
         }).catch((err) => {
-            updateLog(9, `failed to move sample, elab: ${err}\nplease try again`)
+            updateLog(9, `failed to create sample, elab: ${err}\nplease try again`)
             blinkBorder('red');
+
+            if(rawSampleID)
+            {
+             return askELab('delete', `samples/${rawSampleID}`)   
+            }
+        }).catch((err) => {
+            console.log(err)
+            console.log('cleanup on fail has itself failed')
         })
     }
 }
