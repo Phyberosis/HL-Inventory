@@ -222,7 +222,7 @@ class CLProcessor extends CodeProcessor {
             log[3] = `\n** successfully moved '${this.sampleName}' **`;
             updateLog(1, 'please scan a new sample');
             log[3] = '';
-            lastcOde = 0;
+            lastCode = 0;
         }).catch((err) => {
             updateLog(9, `failed to move sample, elab: ${err}\nplease try again`)
             blinkBorder('red');
